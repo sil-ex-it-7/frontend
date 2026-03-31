@@ -127,31 +127,7 @@ export default function JobDetail() {
     }
   };
 
-  const handleCsvUpload = useCallback((file: File) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const text = e.target?.result as string;
-      const lines = text.split('\n').filter(l => l.trim());
-      if (lines.length < 2) return;
-      const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-      const candidates = lines.slice(1).map(line => {
-        const vals = line.split(',').map(v => v.trim());
-        const get = (key: string) => vals[headers.indexOf(key)] || '';
-        return {
-          name: get('name'),
-          email: get('email'),
-          skills: get('skills').split(';').filter(Boolean),
-          experience: parseInt(get('experience')) || 0,
-          education: get('education') || 'any',
-          source: 'External' as const,
-          position: get('position') || '',
-        };
-      });
-      addCandidates(job.id, candidates);
-      toast.success(`${candidates.length} candidates uploaded`);
-    };
-    reader.readAsText(file);
-  }, [addCandidates, job.id]);
+
 
   const runScreening = () => {
     setShowScreeningModal(false);
